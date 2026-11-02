@@ -1,0 +1,4 @@
+Plusieurs niveaux par projet : créer, renommer et dupliquer des cartes dans le même fichier.
+Calques spécialisés : distinguer les calques de tuiles, d’entités et de collisions, plutôt que de mettre tous les contenus dans le même type de calque.
+Entités configurables : définir des types d’objets et leurs champs, par exemple un point d’apparition avec une direction.
+Grille de collision : peindre des zones solides ou d’autres propriétés de gameplay.

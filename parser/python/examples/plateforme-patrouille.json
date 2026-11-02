@@ -1,0 +1,73 @@
+{
+  "format": "faille-map",
+  "version": 3,
+  "metadata": {
+    "title": "Exemple de plateforme en déplacement XY"
+  },
+  "assets": [],
+  "behaviors": [
+    {
+      "id": "patrol-diagonal",
+      "name": "Patrouille diagonale",
+      "type": "patrol",
+      "deltaX": 240,
+      "deltaY": 180,
+      "speed": 75
+    }
+  ],
+  "entityTypes": [
+    {
+      "id": "moving-platform",
+      "name": "Plateforme mobile",
+      "color": "#55d69e",
+      "behavior": {
+        "type": "static"
+      },
+      "fields": []
+    }
+  ],
+  "selectedEntityTypeId": "moving-platform",
+  "currentLevelId": "patrol-demo",
+  "levels": [
+    {
+      "id": "patrol-demo",
+      "name": "Plateforme diagonale",
+      "map": {
+        "width": 960,
+        "height": 540,
+        "gridSize": 32,
+        "bgColor": "#101827"
+      },
+      "layers": [
+        {
+          "id": "demo-entities",
+          "name": "Entités",
+          "type": "entities",
+          "visible": true,
+          "locked": false
+        }
+      ],
+      "activeLayerId": "demo-entities",
+      "collisionTypes": [],
+      "selectedCollisionTypeId": null,
+      "tiles": [],
+      "collisionCells": [],
+      "objects": [
+        {
+          "id": "moving-platform-1",
+          "kind": "entity",
+          "entityTypeId": "moving-platform",
+          "behaviorId": "patrol-diagonal",
+          "fields": {},
+          "layerId": "demo-entities",
+          "name": "Plateforme",
+          "x": 160,
+          "y": 220,
+          "w": 96,
+          "h": 24,
+          "visible": true
+        }
+      ]
+    }
+  ]
+}

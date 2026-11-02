@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Documentation de 2D Tilemap Studio : créez des cartes, des entités et des règles de déplacement.">
+  <title>Documentation — 2D Tilemap Studio</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">
+      <span class="brand-icon" aria-hidden="true">▦</span>
+      <span>
+        <strong>2D Tilemap Studio</strong>
+        <small>Documentation de l’éditeur</small>
+      </span>
+    </a>
+    <a class="back-link" href="../index.html">Retour à l’éditeur <span aria-hidden="true">→</span></a>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="sidebar">
+      <p class="sidebar-label">GUIDE</p>
+      <nav aria-label="Sommaire de la documentation">
+        <a href="#demarrer">Démarrer</a>
+        <a href="#interface">Interface et prise en main</a>
+        <a href="#tuiles">Images et tuiles</a>
+        <a href="#animations">Animations d’images</a>
+        <a href="#entites">Entités et comportements</a>
+        <a href="#niveaux-calques">Niveaux et calques</a>
+        <a href="#collisions">Grilles de gameplay</a>
+        <a href="#import-export">Import et export</a>
+        <a href="#depannage">Aide et dépannage</a>
+        <a href="#parseurs">Charger une carte en code</a>
+        <a href="#raccourcis">Raccourcis</a>
+        <a href="#format">Format du projet</a>
+      </nav>
+      <p class="sidebar-note">Guide mis à jour avec les outils et formats actuels de l’éditeur.</p>
+    </aside>
+
+    <main class="content">
+      <section class="hero" id="demarrer">
+        <p class="eyebrow">GUIDE UTILISATEUR</p>
+        <h1>Créez vos niveaux, à votre façon.</h1>
+        <p class="hero-copy">Découvrez les outils de la carte, configurez vos entités et préparez vos projets pour les utiliser dans votre propre jeu.</p>
+        <a class="hero-button" href="../index.html">Ouvrir l’éditeur <span aria-hidden="true">→</span></a>
+        <div class="hero-tags" aria-label="Fonctionnalités">
+          <span>Cartes multi-niveaux</span>
+          <span>Calques spécialisés</span>
+          <span>Comportements d’entités</span>
+        </div>
+      </section>
+
+      <section class="doc-section" id="interface">
+        <p class="eyebrow">01 — ÉDITION</p>
+        <h2>Comprendre l’interface</h2>
+        <p>L’écran est organisé autour de la carte centrale. La barre du haut gère le projet et les niveaux ; les panneaux latéraux servent à créer, organiser et inspecter le contenu.</p>
+        <div class="card-grid">
+          <article class="info-card">
+            <span class="card-icon">⌖</span>
+            <h3>Carte et outils</h3>
+            <p>La zone centrale est le canevas. Choisissez un outil dans le panneau gauche, puis cliquez ou faites glisser sur la carte selon l’action.</p>
+          </article>
+          <article class="info-card">
+            <span class="card-icon">▤</span>
+            <h3>Panneau gauche regroupé</h3>
+            <p>Les outils restent visibles en haut. Les réglages sont rangés dans quatre sections repliables : Édition & calques, Entités & mouvements, Images & tuiles, Carte & aide.</p>
+          </article>
+          <article class="info-card">
+            <span class="card-icon">⚙</span>
+            <h3>Inspecteur et liste</h3>
+            <p>Le panneau droit montre les propriétés de la sélection et la liste des objets du calque actif. Cliquez sur un objet dans la liste pour le sélectionner.</p>
+          </article>
+        </div>
+        <p>Quand vous choisissez un outil, l’éditeur ouvre automatiquement son groupe de réglages et replie les autres pour garder le panneau lisible. La palette d’outils reste toujours visible au-dessus : vous pouvez donc changer d’outil même si son groupe est fermé. Ouvrez une autre section manuellement si vous voulez consulter plusieurs réglages à la fois. En mode Focus, la barre flottante donne accès aux outils directement sur la carte.</p>
+        <h3>Un premier niveau en cinq étapes</h3>
+        <ol class="numbered-list">
+          <li>Choisissez ou créez un niveau depuis la barre supérieure.</li>
+          <li>Ajoutez une image et utilisez la section <strong>Images & tuiles</strong> pour peindre le décor, ou placez une image comme objet libre.</li>
+          <li>Utilisez <strong>Édition & calques</strong> pour séparer décor, entités et collisions. Activez un calque du bon type ; l’éditeur choisit automatiquement un calque compatible quand vous changez d’outil.</li>
+          <li>Créez un type d’entité, associez éventuellement un sprite, puis placez-le sur un calque d’entités.</li>
+          <li>Exportez une sauvegarde JSON et vérifiez le rendu avec <strong>Visualiser</strong>.</li>
+        </ol>
+        <div class="callout">
+          <strong>Conseil</strong>
+          <p>Activez <kbd>F</kbd> pour passer en mode Focus. La barre flottante permet de changer d’outil, de calque ou de type d’entité sans quitter la carte. <kbd>Échap</kbd> ferme ce mode.</p>
+        </div>
+        <div class="callout">
+          <strong>Déplacer la vue ou déplacer un objet ?</strong>
+          <p>Avec l’outil Sélection, faites glisser un objet pour le déplacer. Faites glisser avec le bouton droit de la souris pour déplacer la vue. La molette ou les boutons de zoom changent l’échelle de la carte.</p>
+        </div>
+      </section>
+
+      <section class="doc-section" id="tuiles">
+        <p class="eyebrow">02 — IMAGES ET TUILES</p>
+        <h2>Peindre avec vos images</h2>
+        <ol class="steps">
+          <li><span>1</span><div><strong>Importez une image</strong><p>Dans la bibliothèque d’images, cliquez sur <em>Ajouter</em> et choisissez une ou plusieurs images.</p></div></li>
+          <li><span>2</span><div><strong>Sélectionnez une découpe</strong><p>Choisissez l’image source, puis délimitez une région à la souris ou saisissez ses coordonnées. Zoomez pour travailler avec précision.</p></div></li>
+          <li><span>3</span><div><strong>Peignez la carte</strong><p>Utilisez la découpe comme tuile. Choisissez le pinceau et sa taille, puis peignez sur un calque de tuiles.</p></div></li>
+        </ol>
+        <div class="two-cards">
+          <article class="mini-card"><h3>Outils de tuiles</h3><p><kbd>B</kbd> peint la tuile sélectionnée, <kbd>I</kbd> prélève une tuile sur la carte, <kbd>G</kbd> remplit une zone contiguë et <kbd>E</kbd> efface les tuiles.</p></article>
+          <article class="mini-card"><h3>Objets de taille libre</h3><p>Utilisez <em>Placer objet</em> pour poser une image ou sa découpe sans la réduire à une case. Sélectionnez l’objet pour le déplacer et le redimensionner.</p></article>
+        </div>
+        <h3>Choisir la bonne façon d’utiliser une image</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Besoin</th><th>Outil ou action</th><th>Résultat</th></tr></thead>
+            <tbody>
+              <tr><td>Répéter un décor sur une grille</td><td>Choisir « Tuile », puis peindre</td><td>Une image découpée est ajustée à chaque case de la grille.</td></tr>
+              <tr><td>Placer une décoration à taille libre</td><td>Choisir « Objet » ou « Placer objet»</td><td>Une image indépendante, déplaçable et redimensionnable.</td></tr>
+              <tr><td>Afficher un personnage ou une plateforme mobile</td><td>Associer l’image au type d’entité</td><td>Le sprite est rendu par-dessus l’entité et suit sa position animée.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>La sélection de spritesheet est partagée avec les outils de tuiles, d’objets et d’apparence d’entité. Elle conserve les coordonnées dans l’image source ; sélectionner une découpe ne crée pas une nouvelle image ni un nouvel asset.</p>
+        <h3 id="animations">Créer et placer une animation</h3>
+        <ol class="numbered-list">
+          <li>Dans <strong>Images & tuiles → Animations d’images</strong>, cliquez sur <strong>Importer une séquence</strong> et choisissez au moins deux images dans l’ordre souhaité.</li>
+          <li>Donnez un nom à l’animation. Chaque image devient une frame, initialisée à <strong>120 ms</strong> ; modifiez chaque durée dans la liste des frames.</li>
+          <li>Cliquez sur <strong>Lire</strong> pour vérifier l’aperçu en boucle. La lecture anime également les objets de cette animation posés sur la carte ; elle s’arrête avec <strong>Pause</strong>.</li>
+          <li>Choisissez un calque d’entités et cliquez sur <strong>Placer sur la carte</strong>. L’objet reste sélectionnable, déplaçable et redimensionnable comme une image fixe.</li>
+          <li>Pour convertir un objet image déjà placé, sélectionnez-le puis choisissez l’animation dans son inspecteur, sous <strong>Apparence</strong>. Choisissez <strong>Image fixe</strong> pour retirer l’animation sans supprimer l’image.</li>
+        </ol>
+        <p>Les images de la séquence restent dans la bibliothèque et sont enregistrées dans le JSON du projet. Les actions de création et de réglage des durées sont annulables. Les lecteurs C et Python existants conservent l’image de couverture d’un objet animé, mais n’exécutent pas encore sa séquence.</p>
+      </section>
+
+      <section class="doc-section" id="entites">
+        <p class="eyebrow">03 — ENTITÉS</p>
+        <h2>Définir des entités et leurs comportements</h2>
+        <p>Les types d’entités décrivent les objets de jeu. Créez un type, donnez-lui un nom et une couleur, associez-lui une image de la bibliothèque (ou la découpe active d’une spritesheet), puis ajoutez les champs utiles à chaque instance.</p>
+        <ol class="numbered-list">
+          <li>Importez une image dans la bibliothèque d’images.</li>
+          <li>Sélectionnez un type d’entité, puis choisissez l’image dans <strong>Apparence → Image du type</strong>. Pour n’utiliser qu’un sprite, sélectionnez sa découpe dans le panneau de spritesheet et cliquez sur <strong>Utiliser la découpe sélectionnée</strong>.</li>
+          <li>Placez ou sélectionnez les entités de ce type : elles utilisent toutes cette apparence et suivent leur comportement de déplacement. La taille s’adapte à la proportion de l’image ; retirer l’image restaure le marqueur coloré.</li>
+        </ol>
+        <p>L’image appartient au type : la changer met à jour toutes ses instances, dans tous les niveaux, sans déplacer leur centre. Exporter le projet conserve l’image et les coordonnées de découpe.</p>
+        <div class="callout">
+          <strong>Un sprite différent pour chaque personnage ?</strong>
+          <p>Créez un type distinct pour chaque apparence souhaitée, par exemple « Plateforme rouge » et « Plateforme bleue ». Les deux types peuvent partager le même comportement de patrouille : l’apparence appartient au type, le mouvement à chaque instance.</p>
+        </div>
+        <p>Les entités sans image gardent leur marqueur coloré. Une image complète ou une découpe remplace ce marqueur. L’éditeur ajuste la taille à la proportion du sprite en conservant le centre de l’entité ; la taille est commune à toutes les instances du type.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Type de champ</th><th>Utilisation typique</th><th>Valeur initiale</th></tr></thead>
+            <tbody>
+              <tr><td>Texte</td><td>Nom, identifiant ou dialogue</td><td>Texte vide</td></tr>
+              <tr><td>Nombre</td><td>Points de vie, dégâts ou vitesse propre</td><td>0</td></tr>
+              <tr><td>Oui / non</td><td>Activé, ouvert ou utilisable</td><td>Non</td></tr>
+              <tr><td>Direction</td><td>Orientation d’un point d’apparition</td><td>Droite</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>Créer et associer un déplacement</h3>
+        <ol class="numbered-list">
+          <li>Dans <strong>Entités & mouvements</strong>, créez un comportement, puis réglez ses déplacements <strong>ΔX</strong>, <strong>ΔY</strong> et sa vitesse. Le point d’arrivée est mesuré depuis le centre de départ.</li>
+          <li>Choisissez ce comportement pour les prochaines entités avant de les placer, ou sélectionnez une entité existante et affectez-le depuis l’inspecteur.</li>
+          <li>Vous pouvez aussi créer un comportement directement depuis l’inspecteur de l’entité sélectionnée.</li>
+          <li>Le segment affiché depuis le centre de l’entité montre le déplacement combiné sur X et Y ; l’entité fait ensuite l’aller-retour sur ce segment.</li>
+        </ol>
+        <p><strong>Exemple :</strong> ΔX = 240, ΔY = 0 et vitesse = 80 px/s déplacent l’entité de 240 pixels vers la droite en environ trois secondes, puis la ramènent au départ. Une valeur négative inverse l’axe ; deux valeurs non nulles créent une diagonale.</p>
+        <div class="callout warning">
+          <strong>À savoir</strong>
+          <p>Les comportements sont partagés, mais l’association est propre à chaque instance. Le mode <strong>Visualiser</strong> affiche les sprites des entités et anime leurs déplacements directement dans l’éditeur. Le visualiseur C/SDL3 affiche également les images associées aux types ; le parseur Python expose leur référence et leur découpe.</p>
+        </div>
+      </section>
+
+      <section class="doc-section" id="niveaux-calques">
+        <p class="eyebrow">04 — ORGANISATION</p>
+        <h2>Organiser vos niveaux et calques</h2>
+        <div class="two-cards">
+          <article class="mini-card">
+            <h3>Niveaux</h3>
+            <p>La barre supérieure permet de créer, dupliquer, renommer et supprimer des niveaux. Les images de la bibliothèque sont partagées entre les niveaux.</p>
+          </article>
+          <article class="mini-card">
+            <h3>Calques</h3>
+            <p>Créez et réordonnez des calques de tuiles, d’entités ou de collisions. Chaque calque peut être masqué ou verrouillé indépendamment.</p>
+          </article>
+        </div>
+        <p>Le calque actif détermine où l’outil peint ou place son contenu. L’éditeur peut activer un calque compatible au moment du choix d’un outil. Un calque verrouillé protège son contenu des modifications.</p>
+      </section>
+
+      <section class="doc-section" id="collisions">
+        <p class="eyebrow">05 — GAMEPLAY</p>
+        <h2>Créer des grilles de gameplay</h2>
+        <p>Les grilles de gameplay sont personnalisées par projet et par niveau, au lieu d’être imposées par des catégories préfabriquées.</p>
+        <div class="steps compact">
+          <div class="step-line"><span>1</span><p>Créez une grille et donnez-lui un nom, par exemple <em>Solide</em>, <em>Danger</em> ou <em>Eau</em>.</p></div>
+          <div class="step-line"><span>2</span><p>Choisissez sa couleur et son opacité pour la reconnaître facilement sur la carte.</p></div>
+          <div class="step-line"><span>3</span><p>Sélectionnez un calque de collisions puis peignez avec <kbd>C</kbd>. Utilisez <kbd>Maj</kbd> + <kbd>C</kbd> pour effacer.</p></div>
+        </div>
+        <p>Masquez ou affichez l’overlay avec la case dédiée. Les grilles et leurs cellules sont conservées dans le projet exporté.</p>
+      </section>
+
+      <section class="doc-section" id="import-export">
+        <p class="eyebrow">06 — PROJETS</p>
+        <h2>Importer et exporter</h2>
+        <p><strong>Exporter JSON</strong> télécharge un projet autonome : les niveaux, calques, tuiles, entités, règles de comportement, animations et images encodées y sont enregistrés. Chaque frame référence un asset et sa durée en millisecondes. <strong>Importer JSON</strong> restaure un projet exporté précédemment et vérifie que les frames pointent vers des images valides.</p>
+        <div class="callout">
+          <strong>Conseil</strong>
+          <p>Exportez régulièrement une copie de votre projet. Les actions d’édition usuelles peuvent être annulées et rétablies depuis la barre supérieure ou avec <kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>Z</kbd>.</p>
+        </div>
+      </section>
+
+      <section class="doc-section" id="depannage">
+        <p class="eyebrow">07 — AIDE</p>
+        <h2>Problèmes fréquents et solutions</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Symptôme</th><th>À vérifier</th><th>Solution</th></tr></thead>
+            <tbody>
+              <tr><td>Je ne peux pas placer d’entité</td><td>Calque actif, verrouillage et type sélectionné.</td><td>Choisissez un calque d’entités déverrouillé, puis sélectionnez ou créez un type.</td></tr>
+              <tr><td>L’entité ne bouge pas en aperçu</td><td>Comportement associé à l’instance et calque visible.</td><td>Sélectionnez l’entité, choisissez une patrouille dans l’inspecteur et réessayez dans Visualiser.</td></tr>
+              <tr><td>Mon entité affiche un cercle au lieu du sprite</td><td>Image associée au type actif, et non uniquement à un objet de carte.</td><td>Dans Entités & mouvements → Apparence, sélectionnez un asset ou appliquez une découpe.</td></tr>
+              <tr><td>La découpe n’est pas celle voulue</td><td>Image source, coordonnées et taille de la sélection.</td><td>Choisissez la bonne image dans le sélecteur de spritesheet, tracez à nouveau la sélection et réappliquez-la au type.</td></tr>
+              <tr><td>Je ne vois pas une tuile peinte</td><td>Type de calque, visibilité, ordre des calques et asset actif.</td><td>Activez un calque de tuiles visible, sélectionnez une tuile et vérifiez qu’un autre calque ne la recouvre pas.</td></tr>
+              <tr><td>Une modification a changé plusieurs entités</td><td>Les images sont partagées par type ; les mouvements sont partagés par comportement.</td><td>Créez un type pour une apparence distincte. Dupliquez ou créez un comportement si une trajectoire différente est nécessaire.</td></tr>
+              <tr><td>Une collision colorée apparaît, mais ne bloque pas le mouvement</td><td>L’aperçu montre les données de collision sans simulation physique.</td><td>Le comportement de collision doit être implémenté dans le jeu qui charge la carte.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>Annuler et récupérer un projet</h3>
+        <p>Utilisez <strong>Annuler</strong> ou <kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>Z</kbd> après une modification. <strong>Rétablir</strong> restaure l’action annulée. Exportez régulièrement le JSON : les images importées et les réglages des types sont intégrés au fichier.</p>
+      </section>
+
+      <section class="doc-section" id="parseurs">
+        <p class="eyebrow">08 — INTÉGRATION</p>
+        <h2>Charger une carte dans votre jeu</h2>
+        <p>Le projet exporté est un JSON. Le mode <strong>Visualiser</strong> de l’éditeur et les exemples Python et C/SDL3 animent les patrouilles aller-retour sur leur segment XY. Les parseurs exposent aussi les comportements pour les intégrer à votre propre moteur.</p>
+        <div class="code-card">
+          <div class="code-heading"><span>Python</span><span>Depuis le dossier parser/python · Python 3.10+</span></div>
+          <pre><code>from tilemap_parser import load_project
+
+project = load_project("examples/plateforme-patrouille.json")
+level = project.current_level
+platform = next(obj for obj in level.objects if obj.kind == "entity")
+behavior = next(item for item in project.behaviors
+                if item.id == platform.behavior_id)
+
+print(level.name, level.map.width, level.map.height)
+print(platform.name, behavior.delta_x, behavior.delta_y, behavior.speed)</code></pre>
+          <p>Guide et tests : <a href="../parser/python/README.md">parser/python/README.md</a>.</p>
+          <p>Pour lancer la simulation animée : <code>python parser/python/visualiser_patrouille.py</code>.</p>
+        </div>
+        <div class="code-card">
+          <div class="code-heading"><span>C / SDL3</span><span>Chargeur réutilisable et visualiseur</span></div>
+          <pre><code>cd parser/c
+make
+./tilemap_viewer.exe "../python/examples/plateforme-patrouille.json"</code></pre>
+          <p>Le visualiseur fait bouger les entités auxquelles un comportement de patrouille est associé. <kbd>Espace</kbd> met l’animation en pause ou la reprend, <kbd>R</kbd> réinitialise le niveau actif, <kbd>Tab</kbd> change de niveau, <kbd>C</kbd> affiche les collisions et <kbd>G</kbd> la grille. Pour intégrer le chargeur ou la mise à jour des mouvements dans un autre programme C, consultez le <a href="../parser/c/README.md">guide du parseur C</a>.</p>
+        </div>
+        <div class="callout">
+          <strong>Aperçu dans l’éditeur</strong>
+          <p>Cliquez sur <strong>Visualiser</strong> dans la barre au-dessus de la carte. Les calques visibles et les collisions sont affichés, et les entités associées à une patrouille sont animées. Utilisez <kbd>Espace</kbd> pour mettre en pause ou reprendre, <kbd>R</kbd> pour recommencer, et <kbd>Échap</kbd> ou <strong>Retour à l’édition</strong> pour quitter. Cet aperçu ne modifie pas les positions enregistrées et n’applique pas de collision physique.</p>
+        </div>
+      </section>
+
+      <section class="doc-section" id="raccourcis">
+        <p class="eyebrow">09 — PRODUCTIVITÉ</p>
+        <h2>Raccourcis clavier</h2>
+        <div class="shortcut-grid">
+          <div><kbd>V</kbd><span>Sélection</span></div>
+          <div><kbd>P</kbd><span>Placer un objet</span></div>
+          <div><kbd>B</kbd><span>Peindre une tuile</span></div>
+          <div><kbd>E</kbd><span>Gomme tuiles</span></div>
+          <div><kbd>I</kbd><span>Pipette</span></div>
+          <div><kbd>G</kbd><span>Remplir une zone</span></div>
+          <div><kbd>C</kbd><span>Peindre gameplay</span></div>
+          <div><kbd>Maj + C</kbd><span>Gomme gameplay</span></div>
+          <div><kbd>F</kbd><span>Mode Focus</span></div>
+          <div><kbd>Échap</kbd><span>Quitter le mode Focus</span></div>
+          <div><kbd>Ctrl/⌘ + Z</kbd><span>Annuler</span></div>
+          <div><kbd>Ctrl/⌘ + Y</kbd><span>Rétablir</span></div>
+          <div><kbd>Suppr</kbd><span>Supprimer la sélection</span></div>
+          <div><kbd>Clic droit</kbd><span>Déplacer la vue</span></div>
+        </div>
+        <p class="muted-note">Les raccourcis d’édition ne s’activent pas lorsque le curseur se trouve dans un champ de saisie ou une liste déroulante.</p>
+      </section>
+
+      <section class="doc-section" id="format">
+        <p class="eyebrow">ANNEXE — DONNÉES</p>
+        <h2>Structure d’un projet exporté</h2>
+        <p>Le format porte l’identifiant <code>faille-map</code>. Les assets sont partagés par le projet ; chaque niveau contient sa carte et ses données spécialisées.</p>
+        <div class="schema-list">
+          <div><code>assets</code><span>Images intégrées en Data URL, avec identifiant, nom et dimensions.</span></div>
+          <div><code>animations</code><span>Animations nommées composées de frames référençant un asset (<code>assetId</code>) et une durée en millisecondes (<code>duration</code>).</span></div>
+          <div><code>entityTypes</code><span>Types, champs configurables et apparence partagée par leurs instances (<code>imageAssetId</code> et découpe facultative <code>imageRegion</code>).</span></div>
+          <div><code>behaviors</code><span>Catalogue des comportements réutilisables avec vecteur X/Y et vitesse.</span></div>
+          <div><code>levels</code><span>Niveaux, dimensions, couleur de fond et taille de grille.</span></div>
+          <div><code>layers</code><span>Calques spécialisés : <code>tiles</code>, <code>entities</code> ou <code>collisions</code>.</span></div>
+          <div><code>tiles</code> et <code>objects</code><span>Contenu placé, coordonnées, calque et référence à un asset, une animation par <code>animationId</code>, un type ou un comportement par <code>behaviorId</code>.</span></div>
+          <div><code>collisionTypes</code> et <code>collisionCells</code><span>Définitions des grilles et cellules peintes.</span></div>
+        </div>
+        <h3>Exemple de comportement XY</h3>
+        <pre class="json-example"><code>{
+  "id": "patrol-diagonal",
+  "name": "Patrouille diagonale",
+  "type": "patrol",
+  "deltaX": 240,
+  "deltaY": 180,
+  "speed": 75
+}</code></pre>
+        <p>La vitesse est exprimée en pixels par seconde le long du segment. Une instance l’utilise en enregistrant son identifiant dans <code>behaviorId</code> ; une référence nulle signifie qu’elle reste immobile. L’image d’une entité est définie par son type avec <code>imageAssetId</code>. Pour une découpe, <code>imageRegion</code> contient <code>x</code>, <code>y</code>, <code>width</code> et <code>height</code> dans l’image source. L’éditeur et le visualiseur C/SDL3 dessinent cette image pendant le déplacement ; le parseur Python fournit aussi ces champs. Les anciens projets utilisant une direction et une distance sont migrés à l’import.</p>
+      </section>
+
+      <footer class="page-footer">
+        <a href="../index.html">← Retour à 2D Tilemap Studio</a>
+        <span>Documentation de l’éditeur de niveaux 2D</span>
+      </footer>
+    </main>
+  </div>
+</body>
+</html>

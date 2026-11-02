@@ -1,0 +1,514 @@
+
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>2D Tilemap Studio</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-icon">▦</span>
+      <div>
+        <strong>2D Tilemap Studio</strong>
+        <small>Éditeur de niveaux 2D</small>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <button id="undoBtn">↶ Annuler</button>
+      <button id="redoBtn">↷ Rétablir</button>
+      <div class="level-actions" aria-label="Niveaux du projet">
+        <select id="levelSelect" aria-label="Niveau actif"></select>
+        <button id="addLevelBtn" type="button" aria-label="Créer un niveau" title="Créer un niveau">+</button>
+        <button id="duplicateLevelBtn" type="button" aria-label="Dupliquer le niveau" title="Dupliquer">Dupliquer</button>
+        <button id="renameLevelBtn" type="button" aria-label="Renommer le niveau" title="Renommer">Renommer</button>
+        <button id="deleteLevelBtn" class="danger" type="button" aria-label="Supprimer le niveau" title="Supprimer">Supprimer</button>
+      </div>
+      <button id="importBtn">Importer JSON</button>
+      <a class="documentation-link" href="docs/index.html">Documentation</a>
+      <input id="jsonInput" type="file" accept=".json,application/json" hidden>
+      <button id="exportBtn" class="primary">Exporter JSON</button>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <aside class="sidebar left">
+      <section class="panel quick-tools-panel">
+        <div class="panel-heading"><h2>Outils</h2></div>
+        <div class="tool-grid">
+          <button class="tool active" data-tool="select">↖ <span>Sélection</span></button>
+          <button class="tool" data-tool="place">＋ <span>Placer objet</span></button>
+          <button class="tool" data-tool="paint">▦ <span>Peindre tuiles</span></button>
+          <button class="tool" data-tool="erase">⌫ <span>Gomme tuiles</span></button>
+          <button class="tool" data-tool="eyedropper">◉ <span>Pipette</span></button>
+          <button class="tool" data-tool="fill">▧ <span>Remplir</span></button>
+          <button class="tool" data-tool="collision">▨ <span>Peindre gameplay</span></button>
+          <button class="tool" data-tool="collisionErase">⌫ <span>Gomme gameplay</span></button>
+          <button class="tool" data-tool="entity">◆ <span>Placer entité</span></button>
+          <button class="tool" data-tool="delete">× <span>Supprimer objet</span></button>
+        </div>
+        <label class="checkline">
+          <input id="snapToggle" type="checkbox">
+          Aligner les placements sur la grille
+        </label>
+      </section>
+
+      <details class="workflow-group" data-workflow="edit" open>
+        <summary>
+          <span>Édition & calques</span>
+          <small>Outils de carte et gameplay</small>
+        </summary>
+          <div class="workflow-content">
+        <section class="panel">
+          <label class="field">
+          Grille de gameplay à peindre
+          <select id="collisionType" disabled>
+            <option value="">Aucune grille créée</option>
+          </select>
+        </label>
+        <label class="field">
+          Couleur de la grille sélectionnée
+          <input id="collisionColor" type="color" value="#f44e5c" disabled>
+        </label>
+        <label class="field">
+          Opacité de la grille
+          <input id="collisionOpacity" type="range" min="0" max="100" value="48" disabled>
+          <output id="collisionOpacityValue">48 %</output>
+        </label>
+        <div class="collision-type-actions">
+          <button id="addCollisionTypeBtn" type="button">+ Créer une grille</button>
+          <button id="renameCollisionTypeBtn" type="button" disabled>Renommer</button>
+          <button id="deleteCollisionTypeBtn" class="danger" type="button" disabled>Supprimer</button>
+        </div>
+        <label class="checkline">
+          <input id="showCollisionGrid" type="checkbox">
+          Afficher la grille de gameplay
+        </label>
+        <button id="clearCollisionGridBtn" class="full" type="button">
+          Effacer la grille de gameplay
+        </button>
+        <p class="hint">Crée tes propres grilles (solide, danger, eau, etc.), choisis leur nom et leur couleur, puis peins-les indépendamment des calques de tuiles. Raccourcis : C pour peindre, Maj+C pour gommer.</p>
+      </section>
+
+      <section class="panel layer-panel">
+        <div class="panel-heading">
+          <h2>Calques</h2>
+          <div class="layer-add-controls">
+            <select id="newLayerType" aria-label="Type du nouveau calque">
+              <option value="tiles">Tuiles</option>
+              <option value="entities">Entités</option>
+              <option value="collisions">Collisions</option>
+            </select>
+            <button id="addLayerBtn" class="small-button" type="button">+ Ajouter</button>
+          </div>
+        </div>
+        <p class="hint">Chaque calque contient uniquement son type de données.</p>
+        <div id="layerList" class="layer-list"></div>
+        <p id="layerStatus" class="layer-status" aria-live="polite"></p>
+      </section>
+        </div>
+      </details>
+
+      <details class="workflow-group" data-workflow="entities">
+        <summary>
+          <span>Entités & mouvements</span>
+          <small>Types, sprites et comportements</small>
+        </summary>
+        <div class="workflow-content">
+      <section class="panel entity-type-panel">
+        <div class="panel-heading">
+          <h2>Types d’entités</h2>
+          <button id="addEntityTypeBtn" class="small-button" type="button">+ Créer</button>
+        </div>
+        <label class="field">
+          Type à placer
+          <select id="entityTypeSelect"></select>
+        </label>
+        <div class="two-fields">
+          <label>Nom du type<input id="entityTypeName" type="text"></label>
+          <label>Couleur<input id="entityTypeColor" type="color" value="#55d69e"></label>
+        </div>
+        <h3 class="subheading">Apparence</h3>
+        <label class="field">
+          Image du type
+          <select id="entityTypeImage">
+            <option value="">Aucune image</option>
+          </select>
+        </label>
+        <div class="button-row">
+          <button id="entityTypeUseCropBtn" type="button">Utiliser la découpe sélectionnée</button>
+          <button id="entityTypeClearImageBtn" type="button">Retirer l’image</button>
+        </div>
+        <div id="entityTypeImagePreview" class="entity-type-image-preview"></div>
+        <p class="hint">L’image ou la découpe sélectionnée remplace le marqueur coloré pour toutes les entités de ce type.</p>
+        <div class="button-row">
+          <button id="deleteEntityTypeBtn" class="danger" type="button">Supprimer le type</button>
+        </div>
+        <h3 class="subheading">Comportements réutilisables</h3>
+        <p class="hint">Crée un trajet une fois, puis associe-le à autant d’entités que tu veux.</p>
+        <button id="addMovementBehaviorBtn" class="full" type="button">+ Créer un comportement</button>
+        <label class="field">
+          Comportement à utiliser pour les prochaines entités
+          <select id="entityBehaviorTemplate"></select>
+        </label>
+        <div id="movementBehaviorEditor" class="entity-behavior-settings">
+          <label class="field">
+            Nom du comportement
+            <input id="movementBehaviorName" type="text" placeholder="Patrouille diagonale">
+          </label>
+          <div class="three-fields">
+            <label>Δ X (px)<input id="movementBehaviorDeltaX" type="number" step="1" value="128"></label>
+            <label>Δ Y (px)<input id="movementBehaviorDeltaY" type="number" step="1" value="0"></label>
+            <label>Vitesse (px/s)<input id="movementBehaviorSpeed" type="number" min="1" step="1" value="60"></label>
+          </div>
+          <p class="hint">Δ X et Δ Y définissent ensemble le point d’arrivée. L’entité fait ensuite l’aller-retour sur ce segment.</p>
+          <button id="deleteMovementBehaviorBtn" class="danger full" type="button">Supprimer ce comportement</button>
+        </div>
+        <p class="hint">La trajectoire est visualisée sur la carte. Le mode Visualiser anime les entités avec leur image.</p>
+        <h3 class="subheading">Champs configurés</h3>
+        <div id="entityFieldList" class="entity-field-list"></div>
+        <div class="entity-field-add">
+          <input id="newEntityFieldName" type="text" placeholder="Nom du champ">
+          <select id="newEntityFieldType" aria-label="Type du champ">
+            <option value="text">Texte</option>
+            <option value="number">Nombre</option>
+            <option value="boolean">Oui / non</option>
+            <option value="direction">Direction</option>
+          </select>
+          <button id="addEntityFieldBtn" type="button">Ajouter champ</button>
+        </div>
+      </section>
+        </div>
+      </details>
+
+      <details class="workflow-group" data-workflow="images">
+        <summary>
+          <span>Images & tuiles</span>
+          <small>Bibliothèque et découpe de sprites</small>
+        </summary>
+        <div class="workflow-content">
+      <section class="panel">
+        <div class="panel-heading"><h2>Options des tuiles</h2></div>
+        <label class="field brush-size-field">
+          Taille du pinceau
+          <input id="brushSize" type="number" min="1" max="16" value="1">
+        </label>
+        <button id="clearTileLayerBtn" class="full" type="button">
+          Effacer les tuiles du calque
+        </button>
+      </section>
+      <section class="panel asset-panel">
+        <div class="panel-heading">
+          <h2>Bibliothèque d'images</h2>
+          <label class="small-button">
+            + Ajouter
+            <input id="imageInput" type="file" accept="image/*" multiple hidden>
+          </label>
+        </div>
+
+        <p class="hint">
+          « Tuile » sélectionne une image pour peindre.
+          « Objet » permet de placer une image de taille libre.
+        </p>
+
+        <div id="tileAssetStatus" class="tile-asset-status">Tuile active : aucune</div>
+        <div id="assetList" class="asset-list">
+          <div class="empty">Aucune image importée.</div>
+        </div>
+      </section>
+
+      <section class="panel animation-panel">
+        <div class="panel-heading">
+          <h2>Animations d’images</h2>
+          <label class="small-button">
+            + Importer une séquence
+            <input id="animationFilesInput" type="file" accept="image/*" multiple hidden>
+          </label>
+        </div>
+        <p class="hint">Sélectionne plusieurs images dans l’ordre des frames. Règle leur durée, visualise le résultat, puis place l’animation comme un objet indépendant.</p>
+        <label class="field">
+          Nom de l’animation
+          <input id="animationNameInput" type="text" placeholder="Nom de l’animation">
+        </label>
+        <label class="field">
+          Animation sélectionnée
+          <select id="animationSelect" disabled>
+            <option value="">Aucune animation</option>
+          </select>
+        </label>
+        <div class="animation-actions">
+          <button id="animationPlayBtn" type="button" disabled>▶ Lire</button>
+          <button id="placeAnimationBtn" type="button" disabled>Placer sur la carte</button>
+          <button id="deleteAnimationBtn" class="danger" type="button" disabled>Supprimer</button>
+        </div>
+        <canvas id="animationPreview" class="animation-preview" width="160" height="120"
+                aria-label="Aperçu de l’animation"></canvas>
+        <p id="animationStatus" class="hint" aria-live="polite">Aucune animation importée.</p>
+        <div id="animationFrames" class="animation-frame-list"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading"><h2>Sélectionner une zone d'image</h2></div>
+
+        <div class="sheet-zoom-controls" aria-label="Zoom de la spritesheet">
+          <button id="sheetZoomOut" type="button" aria-label="Dézoomer">−</button>
+          <output id="sheetZoomValue">100 %</output>
+          <button id="sheetZoomIn" type="button" aria-label="Zoomer">+</button>
+          <button id="sheetZoomReset" type="button">Ajuster</button>
+        </div>
+
+        <label class="field">
+          Image source
+          <select id="sheetSource">
+            <option value="">Choisir une image…</option>
+          </select>
+        </label>
+
+        <div class="two-fields">
+          <label>
+            X source
+            <input id="sheetCropX" type="number" min="0" value="0">
+          </label>
+          <label>
+            Y source
+            <input id="sheetCropY" type="number" min="0" value="0">
+          </label>
+          <label>
+            Largeur découpe
+            <input id="sheetTileW" type="number" min="1" value="32">
+          </label>
+          <label>
+            Hauteur découpe
+            <input id="sheetTileH" type="number" min="1" value="32">
+          </label>
+        </div>
+
+        <div class="sheet-preview-container">
+          <div id="sheetPreview" aria-label="Sélection de la zone d'image"></div>
+        </div>
+
+        <p id="sheetPreviewInfo" class="hint">
+          Choisis une image, puis trace un rectangle sur la zone à découper.
+        </p>
+
+        <div class="button-row crop-actions">
+          <button id="useCropTileBtn" type="button">Utiliser comme tuile</button>
+          <button id="placeCropObjectBtn" type="button">Placer comme objet</button>
+        </div>
+        <p id="sheetStatus" class="hint" aria-live="polite"></p>
+      </section>
+        </div>
+      </details>
+
+      <details class="workflow-group" data-workflow="map">
+        <summary>
+          <span>Carte & aide</span>
+          <small>Dimensions et raccourcis clavier</small>
+        </summary>
+        <div class="workflow-content">
+      <section class="panel">
+        <div class="panel-heading"><h2>Carte</h2></div>
+
+        <div class="two-fields">
+          <label>
+            Largeur (px)
+            <input id="mapWidth" type="number" min="128" max="8192" value="1600">
+          </label>
+          <label>
+            Hauteur (px)
+            <input id="mapHeight" type="number" min="128" max="8192" value="900">
+          </label>
+        </div>
+
+        <label class="field">
+          Taille de grille
+          <input id="gridSize" type="number" min="8" max="256" value="32">
+        </label>
+
+        <label class="field">
+          Fond
+          <input id="bgColor" type="color" value="#101827">
+        </label>
+
+        <button id="resizeMapBtn" class="full">Appliquer dimensions</button>
+      </section>
+
+      <section class="panel">
+        <div class="panel-heading"><h2>Raccourcis</h2></div>
+        <p class="shortcut"><kbd>V</kbd> Sélection</p>
+        <p class="shortcut"><kbd>P</kbd> Placer objet</p>
+        <p class="shortcut"><kbd>B</kbd> Peindre tuiles</p>
+        <p class="shortcut"><kbd>E</kbd> Gomme tuiles</p>
+        <p class="shortcut"><kbd>I</kbd> Pipette</p>
+        <p class="shortcut"><kbd>G</kbd> Remplir une zone</p>
+        <p class="shortcut"><kbd>C</kbd> Peindre gameplay</p>
+        <p class="shortcut"><kbd>Maj+C</kbd> Gomme gameplay</p>
+        <p class="shortcut"><kbd>Del</kbd> Supprimer</p>
+        <p class="shortcut">Clic droit : déplacer la vue</p>
+      </section>
+        </div>
+      </details>
+    </aside>
+
+    <section class="editor">
+      <div class="canvas-toolbar">
+        <div class="zoom-actions">
+          <button id="zoomOut">−</button>
+          <span id="zoomLabel">100%</span>
+          <button id="zoomIn">＋</button>
+          <button id="resetView">Recentrer</button>
+        </div>
+        <div class="canvas-toolbar-actions">
+          <span id="selectionStatus">Aucun objet sélectionné</span>
+          <button id="focusModeBtn" type="button" aria-pressed="false"
+                  title="Mode focus (F)">⛶ Focus</button>
+          <button id="visualizeBtn" type="button" aria-pressed="false"
+                  title="Visualiser le niveau avec les animations">▶ Visualiser</button>
+          <div id="visualizationControls" class="visualization-controls" hidden>
+            <span class="visualization-label">Aperçu animé · collisions visuelles uniquement</span>
+            <button id="visualizationPauseBtn" type="button">Pause</button>
+            <button id="visualizationResetBtn" type="button">Recommencer</button>
+            <button id="visualizationExitBtn" type="button">Retour à l’édition</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="viewport" class="viewport">
+        <div id="focusToolbar" class="focus-toolbar" aria-label="Outils du mode Focus">
+          <div class="focus-tools" aria-label="Outils">
+            <button type="button" data-focus-tool="select" aria-label="Sélection" title="Sélection (V)">↖</button>
+            <button type="button" data-focus-tool="place" aria-label="Placer objet" title="Placer objet (P)">＋</button>
+            <button type="button" data-focus-tool="entity" aria-label="Placer entité" title="Placer entité">◆</button>
+            <button type="button" data-focus-tool="paint" aria-label="Peindre tuiles" title="Peindre tuiles (B)">▦</button>
+            <button type="button" data-focus-tool="erase" aria-label="Gomme tuiles" title="Gomme tuiles (E)">⌫</button>
+            <button type="button" data-focus-tool="eyedropper" aria-label="Pipette" title="Pipette (I)">◉</button>
+            <button type="button" data-focus-tool="fill" aria-label="Remplir" title="Remplir (G)">▧</button>
+            <button type="button" data-focus-tool="collision" aria-label="Peindre gameplay" title="Peindre gameplay (C)">▨</button>
+            <button type="button" data-focus-tool="collisionErase" aria-label="Gomme gameplay" title="Gomme gameplay (Maj+C)">⌧</button>
+          </div>
+          <div class="focus-controls">
+            <label>
+              Calque
+              <select id="focusLayerSelect" aria-label="Calque actif en mode Focus"></select>
+            </label>
+            <label>
+              Entité
+              <select id="focusEntityTypeSelect" aria-label="Type d’entité"></select>
+            </label>
+            <label>
+              Comportement
+              <select id="focusBehaviorSelect" aria-label="Comportement des prochaines entités"></select>
+            </label>
+            <label>
+              Gameplay
+              <select id="focusCollisionTypeSelect" aria-label="Type de gameplay"></select>
+            </label>
+            <div class="focus-zoom" aria-label="Zoom de la carte">
+              <button id="focusZoomOut" type="button" aria-label="Dézoomer">−</button>
+              <output id="focusZoomLabel">100%</output>
+              <button id="focusZoomIn" type="button" aria-label="Zoomer">＋</button>
+              <button id="focusFit" type="button">Ajuster</button>
+            </div>
+          </div>
+        </div>
+        <div id="canvasStage" class="canvas-stage">
+          <canvas id="mapCanvas" width="1600" height="900"></canvas>
+        </div>
+        <div id="dropHint" class="drop-hint">
+          Dépose une image ici pour créer un objet
+        </div>
+      </div>
+
+      <footer class="statusbar">
+        <span id="coords">X: 0 · Y: 0</span>
+        <span id="mapInfo">1600 × 900 px</span>
+        <span>Grille : peindre · Clic droit : déplacer</span>
+      </footer>
+    </section>
+
+    <aside class="sidebar right">
+      <section class="panel">
+        <div class="panel-heading"><h2>Objet sélectionné</h2></div>
+
+        <div id="noSelection" class="empty">
+          Sélectionne un objet sur la carte ou dans la liste.
+        </div>
+
+        <div id="objectProperties" hidden>
+          <div id="selectedPreview" class="selected-preview"></div>
+
+          <label class="field">
+            Nom
+            <input id="objName" type="text">
+          </label>
+
+          <div id="objectVisualFields">
+          <div class="two-fields">
+            <label>X<input id="objX" type="number"></label>
+            <label>Y<input id="objY" type="number"></label>
+            <label>Largeur<input id="objW" type="number" min="1"></label>
+            <label>Hauteur<input id="objH" type="number" min="1"></label>
+          </div>
+          </div>
+
+          <div id="entityBehaviorAssignment" class="entity-instance-fields" hidden>
+            <h3 class="subheading">Apparence de cette entité</h3>
+            <label class="field">
+              Image de l’entité
+              <select id="entityInstanceImage">
+                <option value="type-default">Image par défaut du type</option>
+                <option value="no-image">Aucune image</option>
+              </select>
+            </label>
+            <button id="entityInstanceUseCropBtn" class="full" type="button">
+              Utiliser la découpe sélectionnée
+            </button>
+            <div id="entityInstanceImagePreview" class="entity-type-image-preview"></div>
+            <p class="hint">Cette image ne change que l’entité sélectionnée. Laisse la valeur par défaut pour reprendre l’image de son type.</p>
+            <hr>
+            <label class="field">
+              Comportement associé
+              <select id="entityInstanceBehavior"></select>
+            </label>
+            <button id="createBehaviorForEntityBtn" class="full" type="button">+ Créer et associer un comportement</button>
+            <p id="entityBehaviorStatus" class="entity-behavior-status"></p>
+          </div>
+          <div id="entityInstanceFields" class="entity-instance-fields"></div>
+          <div id="imageAnimationAssignment" class="entity-instance-fields" hidden>
+            <label class="field">
+              Apparence
+              <select id="objectAnimationSelect"></select>
+            </label>
+          </div>
+
+          <label class="checkline">
+            <input id="objVisible" type="checkbox" checked>
+            Visible
+          </label>
+
+          <div class="button-row">
+            <button id="duplicateBtn">Dupliquer</button>
+            <button id="deleteBtn" class="danger">Supprimer</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel object-list-panel">
+        <div class="panel-heading">
+          <h2>Objets de la carte</h2>
+          <span id="objectCount" class="count">0</span>
+        </div>
+
+        <div id="objectList" class="object-list">
+          <div class="empty">Aucun objet placé.</div>
+        </div>
+      </section>
+    </aside>
+  </main>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
